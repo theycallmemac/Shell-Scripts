@@ -1,0 +1,16 @@
+
+url="http://finance.yahoo.com/quote/$1"
+
+cd $HOME
+
+# Get webpage
+wget -q -O $HOME/output.txt $url
+
+# Finds line with 'Fz(36px)', this has the stock price.
+cat output.txt | sed 's|</span>|</span>\n|g'|sed 's|<span|\n<span|g'| grep -i "Fz(36px)" > $HOME/temp.txt 
+
+# Removes extraneous html stuffs
+cat temp.txt |sed -e 's|^.*">*||' |sed 's|</span>||'
+
+# Removes the file that program created..
+rm $HOME/temp.txt

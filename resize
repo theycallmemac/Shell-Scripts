@@ -1,0 +1,13 @@
+cd /users/tutors/mhtest15/share/testsuite/ORahilly/06.Ballylongford
+
+for i in *008*.jpg
+do
+
+ djpeg  -scale 1/8 -bmp $i  > /users/case2/mcdermj7/bin/temp.bmp
+
+ cjpeg  temp.bmp            > /users/case2/mcdermj7/images/small.$i
+
+done
+
+cd ~/images
+ls -l

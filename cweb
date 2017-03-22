@@ -1,0 +1,13 @@
+
+OLDSTRING=$1
+NEWSTRING=$2
+
+cd $HOME/shakespeare/macbeth
+
+for file in *html
+do
+ cat $file | sed -i -- "s|$OLDSTRING|$NEWSTRING|g" *
+done
+
+mcdermj7@maudit:~/bin $
+

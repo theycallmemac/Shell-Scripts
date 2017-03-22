@@ -1,0 +1,15 @@
+
+EXTENSION=$1 
+DESTINATION=$2
+SOURCE=$3
+
+# Example usage: mvfiles .zip ~/Desktop/zipfiles/ ~/Downloads/
+cd "$SOURCE"
+for file in "*$EXTENSION"; 
+do 
+	(mv $file "$DESTINATION" && echo "Moved files to $DESTINATION") || echo "No $EXTENSION files found..." && exit;
+
+done
+
+cd "$DESTINATION"
+ls
