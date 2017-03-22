@@ -1,3 +1,4 @@
+#!/bin/bash
 
 url="http://finance.yahoo.com/quote/$1"
 
