@@ -1,3 +1,4 @@
+#!/bin/bash
 
 OLDSTRING=$1
 NEWSTRING=$2
