@@ -1,3 +1,4 @@
+#!/bin/bash
 
 EXTENSION=$1 
 DESTINATION=$2
