@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd /users/tutors/mhtest15/share/testsuite/ORahilly/06.Ballylongford
 
 for i in *008*.jpg
