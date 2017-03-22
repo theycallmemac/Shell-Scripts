@@ -1,0 +1,18 @@
+
+#!/bin/bash
+
+# checks if program in bin
+which $1 > /dev/null
+
+
+if [[ $? = 0 ]]
+	then
+    	echo "yes in bin"
+
+else
+    echo "not in bin"
+
+    cd $HOME/bin/
+    touch $1
+    chmod +x $1
+fi
