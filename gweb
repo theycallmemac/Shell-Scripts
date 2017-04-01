@@ -1,4 +1,7 @@
-#!bin/bash
+#!/bin/bash
+
+# an offline search engine to search offline web pages in your file system
+# produces an offline output web page where you are able to click on links through a sepearate script called clickable
 exec > $HOME/tmp/output.html
 
 
