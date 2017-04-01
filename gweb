@@ -1,13 +1,13 @@
 #!/bin/bash
 
 # an offline search engine to search offline web pages in your file system
-# produces an offline output web page where you are able to click on links through a sepearate script called clickable
+# produces an offline output web page where you are able to click on links through another of my scripts script called clickable
 exec > $HOME/tmp/output.html
 
 
 cd /users/tutors/mhtest15/share/shakespeare/
 
-
 echo '<pre>'
+# print the HTML tags without interpreting them and pipe to clickable
 grep -i "$1"  */*html |    sed -e 's|<|\&lt;|g'   |   sed -e 's|>|\&gt;|g' | clickable
 echo '</pre>'
