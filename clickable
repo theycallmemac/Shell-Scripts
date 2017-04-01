@@ -1,0 +1,17 @@
+#!/bin/bash
+
+
+#read what has been piped to clickable
+while read line
+
+do
+  #file = everything befor the ':'
+  file=`echo "$line" | cut -f1 -d':' `
+  
+  #hit = everything after the ':'
+  hit=`echo "$line" | cut -f2 -d':' `
+
+#output in form 'file: hit' where file is a clickable link
+ echo "<a href=/users/tutors/mhtest15/share/shakespeare/$file> $file</a>: $hit<br>"
+
+done
