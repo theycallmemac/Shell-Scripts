@@ -5,6 +5,8 @@ DESTINATION=$2
 SOURCE=$3
 
 # Example usage: mvfiles .zip ~/Desktop/zipfiles/ ~/Downloads/
+# kind of just use this for when my downloads is clogged up 
+# and for when I need to move all files as a certain extension around for organisational purposes
 cd "$SOURCE"
 for file in "*$EXTENSION"; 
 do 
