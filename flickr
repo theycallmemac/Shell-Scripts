@@ -1,0 +1,21 @@
+#!/bin/bash
+
+#Flickr is an image sharing site. You can get a Flickr XML feed of a search on Flickr. 
+#takes an argument as a tag for latest photos for which you want to search in format flickr tag
+
+
+cd $HOME
+# build url based on cl arg
+URL="https://api.flickr.com/services/feeds/photos_public.gne?tags=$1"
+
+#gets url sends it to tmp.html
+wget -q -O - $URL > $HOME/tmp.html
+
+# extracts the sections we want from tmp.html
+# sed commands are to decodethe HTML payloads
+# Sends output to file.html
+
+cat tmp.html | xpath //content 2>/dev/null | sed -e 's|\&lt;|<|g' | sed -e 's|\&gt;|>|g' | sed -e 's|&quot;|"|g' > $HOME/file.html
+
+# Launch the browser with that file. 
+firefox $HOME/file.html &
