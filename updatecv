@@ -1,0 +1,17 @@
+#!/bin/bash
+
+#updates my cv on my website
+#does so hourly 
+
+while true
+do
+	cd $HOME/Google\ Drive/
+  #copies over my cv from my google drive to where I host it
+	sshpass -p 'password' scp -r mycv.pdf user@host/public_html
+	D=$(date +"%D")
+	T=$(date +"%T")
+  #echoes most recent update
+	echo "CV updated at $T on $D"
+  #sleeps until it may repeat instructions again
+	sleep 3600
+done
