@@ -1,60 +1,65 @@
+OPTION=$1 
+PAGE=$2
 
-#!/bin/bash
-
-#updates my webpages after editing my running command 'updatepage' with an arg $PAGE
-PAGE=$1 
-
-#changes to while I keep my files for my website locally
+#sets the directory you store your files in, html, css, js, etc.
 cd $HOME/Documents/Website/
 
-#checks to see if there is a html file of name $PAGE.html
-#example, where $PAGE is 'index', it check for index.html
+#list
+if [ "$PAGE" == "-l" ]; then
+	echo -e "\nHere is the list of files you can update:\n"
+	echo -e "html files:"
+	ls *.html
+	echo -e "\ncss files:"
+	ls *.css
+	echo -e "\njs files:"
+	ls *.js
+	echo -e "\n"
+	exit 0
+fi
+
+#help
+if [ "$OPTION" == "-h" ]; then
+	echo -e "NAME"
+	echo -e "	updatepage - updates website page using a given argument\n"
+	echo -e "SYNOPSIS"
+	echo -e "	updatepage [OPTION]... [FILE]...\n"
+	echo -e "DESCRIPTION"
+	echo -e "	-l, --list"
+	echo -e "		To list the files you can use from your set directory just use:- updatepage -l\n"
+	echo -e "	-t, --temp"
+	echo -e "		Used to place a standard temporary page in place of one which requires fixing\n"
+	exit 0
+fi
+
+#temp
+if [ "$OPTION" == "-t" ]; then
+	cd $HOME/Documents/Backups/WebsiteBackup
+	cp $PAGE.* $HOME/Documents/Website
+	updatepage $PAGE
+fi
+
+if [ ! -e "$OPTION" ]; then
+	PAGE=$1
+fi
+
+
 if [ -e "$PAGE.html" ]; then
-  #copies over to my public_html on another host
-	sshpass -p 'password' scp -r $PAGE.html user@host:~/public_html
-  
-  #echoes the update status
+	sshpass -p 'exhem96w' scp -r $PAGE.html mcdermj7@student.computing.dcu.ie:~/public_html
 	echo $PAGE.html has been updated!
-  
-  #exits
 	exit 0
 fi
 
-#checks to see if there is a css file of name $PAGE.css
-#example, where $PAGE is 'styles', it check for styles.css
 if [ -e "$PAGE.css" ]; then
-#copies over to my public_html on another host
-	sshpass -p 'password' scp -r $PAGE.css user@host:~/public_html
-  
-  #echoes the update status
+	cp $PAGE.css $HOME/Documents/Backups/WebsiteBackup/
+	sshpass -p 'exhem96w' scp -r $PAGE.css mcdermj7@student.computing.dcu.ie:~/public_html
 	echo $PAGE.css has been updated!
-  
-  #exits
 	exit 0
 fi
 
-#checks to see if there is a css file of name $PAGE.js
-#example, where $PAGE is 'quoteGenerator', it check for quoteGenerator.js
 
 if [ -e "$PAGE.js" ]; then
-  #copies over to my public_html on another host
-	sshpass -p 'password' scp -r $PAGE.js user@host:~/public_html
-  
-  #echoes the update status
+	cp $PAGE.js $HOME/Documents/Backups/WebsiteBackup/
+	sshpass -p 'exhem96w' scp -r $PAGE.js mcdermj7@student.computing.dcu.ie:~/public_html
 	echo $PAGE.js has been updated!
-  
-  #exits
 	exit 0
 fi
-
-
-#if the file doesn't exist, it pulls up all files from my directory
-#this shows the users that the file does not exist, at least not in this directory
-#this may also show the user that their input was incorrect
-echo -e "File does not exist\n"
-echo -e "html files:"
-ls *.html
-echo -e "\ncss files:"
-ls *.css
-echo -e "\njs files:"
-ls *.js
