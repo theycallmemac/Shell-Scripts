@@ -24,19 +24,35 @@ if [ "$OPTION" == "-h" ]; then
 	echo -e "SYNOPSIS"
 	echo -e "	updatepage [OPTION]... [FILE]...\n"
 	echo -e "DESCRIPTION"
+	echo -e "	-a, --all"
+	echo -e "		updates all html, css and js files\n"
 	echo -e "	-l, --list"
-	echo -e "		To list the files you can use from your set directory just use:- updatepage -l\n"
-	echo -e "	-t, --temp"
-	echo -e "		Used to place a standard temporary page in place of one which requires fixing\n"
+	echo -e "		lists the files you can use from your set directory\n"
 	exit 0
 fi
 
-#temp
-if [ "$OPTION" == "-t" ]; then
-	cd $HOME/Documents/Backups/WebsiteBackup
-	cp $PAGE.* $HOME/Documents/Website
-	updatepage $PAGE
+#all
+if [ "$OPTION" == "-a" ]; then
+	for filename in *.html;
+	do 
+		sshpass -p 'exhem96w' scp -r $filename mcdermj7@student.computing.dcu.ie:~/public_html; 
+		echo -e "Updated $filename\n"
+	done
+
+	for filename in *.css;
+	do 
+		sshpass -p 'exhem96w' scp -r $filename mcdermj7@student.computing.dcu.ie:~/public_html; 
+		echo -e "Updated $filename\n"
+	done
+
+	for filename in *.js;
+	do 
+		sshpass -p 'exhem96w' scp -r $filename mcdermj7@student.computing.dcu.ie:~/public_html; 
+		echo -e "Updated $filename\n"
+	done
+	echo -e 'Done\n'
 fi
+
 
 if [ ! -e "$OPTION" ]; then
 	PAGE=$1
