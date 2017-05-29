@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+# I use this to push images or gifs to my public html for use on my website.
+
+IMG=$1
+
+cd # to the dir you want to push images from, for me it's $HOME/Downloads
+
+if [ -e "$IMG.jpg" ]; then
+	sshpass -p 'password' scp -r $IMG.jpg user@localhost
+	echo $IMG.jpg has been uploaded!
+	exit 0
+fi
+
+if [ -e "$IMG.jpeg" ]; then
+	sshpass -p 'exhem96w' scp -r $IMG.jpeg user@localhost
+	echo $IMG.jpeg has been uploaded!
+	exit 0
+fi
+
+
+if [ -e "$IMG.png" ]; then
+	sshpass -p 'password' scp -r $IMG.png user@localhost
+	echo $IMG.png has been uploaded!
+	exit 0
+fi
+
+if [ -e "$IMG.gif" ]; then
+	sshpass -p 'password' scp -r $IMG.gif user@localhost
+	echo $IMG.gif has been uploaded!
+	exit 0
+fi
+
+
+
+
