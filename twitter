@@ -1,0 +1,27 @@
+# a script I use to interact with my Twitter Bots. Bots found at https://github.com/theycallmemac/TwitterBots
+
+
+# my js files and folders share the same name
+# therefore script can check if in the proper directory and judges how to run, i.e node script.js $TWEET or npm 
+OPTION="$1"
+TWEET=$2
+
+# set working directory
+cd ~/Documents/Javascript/"$OPTION"/
+
+
+# control flow to check directory and choose how to run script
+if [ "$OPTION" == "tweet" ];then
+  # runs this wasy because package.json scripts won't allow command line args to be passed
+  # example usage -> twitter tweet "Hello World!"
+  node tweet.js "$TWEET"
+elif [ "$OPTION" == "user-timeline" ];then
+  # same as above, this option takes an integer n to display last n tweet made by user
+  # example usage -> twitter user-timeline 4
+  node user-timeline.js "$TWEET"
+else
+  # runs using npm 
+   # example usage -> twitter random-like
+   # example usage -> twitter random-retweet
+  npm start
+fi
