@@ -1,0 +1,33 @@
+
+#!/bin/bash
+
+# takes an argument, a html file wihtout the extension
+FILENAME=$1
+
+# sets DEST variable
+DEST=$HOME/Documents/Python/
+SOURCE=$HOME/Documents/Website/
+
+# changes into where html files are kept is
+cd $SOURCE
+
+# if file exists, move it to where it can be analysed, else exit script
+if [ -e "$FILENAME.html" ];then
+  mv "$FILENAME.html" $DEST
+else
+  echo -e "File does not exist."
+  exit 0
+fi
+
+# change into DEST
+cd $DEST
+
+echo -e "\n"
+# run sentiment analysis script
+python blog_sentiment.py "$FILENAME.html"
+echo -e "\n"
+# run spellcheck script
+python spellcheck.py "$FILENAME.html"
+
+# move file back from DEST to SOURCE
+mv "$FILENAME.html" $SOURCE
