@@ -1,0 +1,31 @@
+# change to where the scripts are
+cd ~/Documents/Projects/Python/lastfmbots/
+
+# EXAMPLES
+# Example usage: lastfm recent-tracks 10
+# Example usage: lastfm top-albums tweet
+
+# set args
+OPTION=$1
+NUM=$2
+
+# if no value for NUM, then script cannot pass on a limit parameter
+if [ "$NUM" == "" ];then
+  echo -e "No Limit Passed, Try Again"
+  exit 0
+fi
+
+# runs recent_tracks.py with a parameter
+if [ "$OPTION" == "recent-tracks" ];then
+  python3 recent_tracks.py $NUM
+fi
+
+# runs top_artists.py with a parameter
+if [ "$OPTION" == "top-artists" ];then
+  python3 top_artists.py $NUM
+fi
+
+# runs top_albums.py with a parameter
+if [ "$OPTION" == "top-albums" ];then
+  python3 top_albums.py $NUM
+fi
