@@ -29,3 +29,8 @@ fi
 if [ "$OPTION" == "top-albums" ];then
   python3 top_albums.py $NUM
 fi
+
+# runs top_tracks.py with a parameter
+if [ "$OPTION" == "top-tracks" ];then
+  python3 top_tracks.py $NUM
+fi
