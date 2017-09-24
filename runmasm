@@ -1,0 +1,36 @@
+# Using MacOSX means you have some difficulty running MASM (for obvious reasons)
+
+# here's a shell script which helped me to run masm code through wine
+
+export WINE_MASM_DIR=~/wine-masm
+function masm() (
+    # Stop on errors
+    set -e
+
+    # Use the correct wine directory
+    export WINEPREFIX=$WINE_MASM_DIR
+
+    # Get the path to the file without a .asm extension
+    FILENAME="$(basename "$1")"
+    EXTENSION="${FILENAME##*.}"
+    shopt -s nocasematch   # String case-insensitive comparison
+    if [[ "$EXTENSION" = "asm" ]]; then
+        FILENAME="${FILENAME%.*}"   # Remove extension
+    fi
+    UNIX_PATH="$(dirname "$1")/$FILENAME"
+
+    # Convert forwards slashes into backslashes
+    WINDOWS_PATH=$(echo "$UNIX_PATH" | tr '/' '\')
+
+    # Assemble file
+    wine ml -nologo -c -coff -Zi "$WINDOWS_PATH.asm"
+
+    # Link files
+
+    wine link /NOLOGO /SUBSYSTEM:CONSOLE /ENTRY:main \
+        /LIBPATH:'C:\masm32\lib' \
+        ca296.lib kernel32.lib user32.lib "$WINDOWS_PATH.obj"
+
+    # Run the linked executable
+    wine "$WINDOWS_PATH.exe"
+)
