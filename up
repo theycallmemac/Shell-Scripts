@@ -1,0 +1,16 @@
+#!/bin/bash
+# takes one arg, an integer. Indicates the number of directories you wish to move up
+# for example, to move up three directories, run:
+# . up 3
+# to move up one directory run
+# . up 1
+
+LEVEL=$1
+CDIR=""
+for ((i = 1; i <= LEVEL; i++))
+do
+    CDIR+=../
+done
+
+cd $CDIR
+echo "You are in: "$PWD

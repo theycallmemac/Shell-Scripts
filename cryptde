@@ -1,0 +1,12 @@
+#!/bin/bash
+# cryptde - a script to decrypt files using openssl
+
+FILE=$1
+
+if [ $FILE == -h ]; then
+    echo "cryptde <name of file>";
+    echo "  - cryptde is a script to decrypt des3 encrypted files";
+    exit;
+fi
+
+openssl des3 -d -salt -in "$FILE" -out "${FILE%.[^.]*}"
