@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+usage () {
+    cat <<EOF
+Usage: lock [-s] [-d] [-a]
+    -s  : mute sound
+    -d, : sleep display
+    -a, : mute the sound and sleep the display
+    -h, : print out usage info
+EOF
+}
+
+silence () {
+    # mutes all audio
+    if [[ $BOTH_OFF = true ]] || [[ $SOUND_OFF = true ]] ; then
+            echo "Muting sound..."
+            osascript -e "set Volume 0"
+    fi
+}
+
+rest () {
+    # sleeps the display
+    if [[ $BOTH_OFF = true ]] || [[ $DISPLAY_OFF = true ]] ; then
+        echo "Sleeping display..."
+        open -a ScreenSaverEngine
+    fi
+}
+
+both() {
+    silence && rest
+}
+
+BOTH_OFF=false
+DISPLAY_OFF=false
+SOUND_OFF=false
+
+for i in "$@"
+do
+    case $i in
+        -h)
+                usage
+                exit 1
+                ;;
+        -a)
+                BOTH_OFF=true
+                both
+                ;;
+        -d)
+                DISPLAY_OFF=true
+                rest
+                ;;
+        -s)
+                SOUND_OFF=true
+                silence
+                ;;
+        *)
+                usage
+                exit 1
+                ;;
+    esac
+done
+exit 0
