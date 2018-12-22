@@ -1,0 +1,19 @@
+#!/bin/sh
+
+DIRS="/home/user/projects/* "
+USERNAME="user@gmail.com"
+date=`date +%Y_%m_%d`
+
+for D in $DIRS; do
+    if [ -d "${D}" ]; then
+       NAME=$(echo $D | cut -d/ -f5-)
+       cd "${D}"
+        if [ -e ".git" ]; then
+            mkdir -p /home/${USER}/gitlogs/${NAME}
+            touch /home/${USER}/gitlogs/${NAME}/${NAME}_${date}.log
+            echo  "My work over the past 7 days\n" > /home/${USER}/gitlogs/${NAME}/${NAME}_${date}.log
+            git log --author="james.mcdermott7@mail.dcu.ie"  --format="%aD --> %B" --since="30 day ago" --reverse | sed '/^$/d' >> /home/${USER}/gitlogs/${NAME}/${NAME}_${date}.log
+            mailx -s "Weekly Review: ${NAME}" james.mcdermott7@mail.dcu.ie < /home/${USER}/gitlogs/${NAME}/${NAME}_${date}.log
+        fi
+    fi
+done
