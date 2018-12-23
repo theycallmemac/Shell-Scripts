@@ -1,19 +1,102 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
+
+# Requires all the repositories you want to monitor to exist in the same directory
+# I usually create a directory in my home dir and move my repositories in there
 DIRS="/home/user/projects/* "
-USERNAME="user@gmail.com"
-date=`date +%Y_%m_%d`
 
-for D in $DIRS; do
-    if [ -d "${D}" ]; then
-       NAME=$(echo $D | cut -d/ -f5-)
-       cd "${D}"
-        if [ -e ".git" ]; then
-            mkdir -p /home/${USER}/gitlogs/${NAME}
-            touch /home/${USER}/gitlogs/${NAME}/${NAME}_${date}.log
-            echo  "My work over the past 7 days\n" > /home/${USER}/gitlogs/${NAME}/${NAME}_${date}.log
-            git log --author="james.mcdermott7@mail.dcu.ie"  --format="%aD --> %B" --since="30 day ago" --reverse | sed '/^$/d' >> /home/${USER}/gitlogs/${NAME}/${NAME}_${date}.log
-            mailx -s "Weekly Review: ${NAME}" james.mcdermott7@mail.dcu.ie < /home/${USER}/gitlogs/${NAME}/${NAME}_${date}.log
+
+# Can be your name, but much easier if you make this your email
+USERNAME="user@mail.dcu.ie"
+
+
+# You can change the format of the date lwhcih gets logged if you want
+DATE=`date +%Y_%m_%d`
+
+
+# Add who this get's mailed to. If you're confident on your workflow, send it to your boss.
+RECIPIENT="other@gmail.com"
+
+
+# ased on parameter passed, returns a string which will be created as a directory
+periodToString() {
+    case $opt in
+        w)
+            echo "weekly_logs"
+            ;;
+        m)
+            echo "monthly_logs"
+            ;;
+        y)
+            echo "annual_logs"
+            ;;
+    esac
+}
+
+
+# Checks each file in DIRS, checks if it a dierectory and if '.git' exists inside it.
+# If so, a git report directory is created in the users home directory, which will have a subdirectory based on what the user passed as a paramter
+# Gets the commit history of each directory for the desired period of time where the author is the username passed above
+# This is reversed so as to be in chronological order. Any blank lines are removed using sed and a report is generated.
+# This report is email to an email of the user's choice, as set above. I usually email it to myself when this is running as a cronjob.
+reporter() {
+    for D in $DIRS; do
+        if [ -d "${D}" ]; then
+           NAME=$(echo $D | cut -d/ -f5-)
+           cd "${D}"
+            if [ -e ".git" ]; then
+                PTS=$(periodToString)
+                mkdir -p /home/${USER}/gitreports/${PTS}/${NAME}
+                touch /home/${USER}/gitreports/${PTS}/${NAME}//${NAME}_${DATE}.log
+                echo -e "My ${NAME} workflow since ${PERIOD}:\n" > /home/${USER}/gitreports/${PTS}/${NAME}/${NAME}_${DATE}.log
+                git log --author="$USERNAME" --format="%aD --> %B" --since=="${PERIOD}" --reverse | sed '/^$/d' >> /home/${USER}/gitreports/${PTS}/${NAME}/${NAME}_${DATE}.report
+                mailx -s "${PTS} review: ${NAME}" ${RECIPIENT} < /home/${USER}/gitreports/${PTS}/${NAME}/${NAME}_${DATE}.report
+            fi
         fi
-    fi
+    done
+}
+
+
+# A help message displayed when the user passes an incorrect parameter or `-h`
+usage() {
+	cat <<EOF
+Report
+Description: A program to report back your weekly, monthly, or yearly git workflow through email.
+Usage: report [-h] [-w] [-m] [-y]
+    -h  Show this help message
+    -w  Report workflow over the past week.
+    -m  Report workflow over the past month.
+    -y  Report workflow over the past year.
+Examples:
+    report -h
+    report -w
+EOF
+}
+
+
+# Accepts only w, m, y, and h
+# Anything else results in the help message 
+while getopts ":wmyh" opt; do
+    case "${opt}" in
+        h)
+            usage
+            ;;
+        w)
+            PERIOD="7 days ago"
+            reporter
+            ;;
+        m)
+            PERIOD="1 month ago"
+            reporter
+            ;;
+        y)
+            PERIOD="1 year ago"
+            reporter
+            ;;
+        *)
+            usage
+            exit 0
+            ;;
+    esac
 done
+
