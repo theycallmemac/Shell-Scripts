@@ -1,0 +1,75 @@
+#!/bin/bash
+
+###############
+# /root stuff #
+###############
+
+echo
+echo "-------------[ /root permissions ]------------------"
+
+root_permission=$(stat /root | grep -c "Access: (0700/drwx------)")
+
+if [ "$root_permission" -ne 1 ]
+then
+	echo "WARNING: The permissions on /root are NOT 0700"
+else
+	echo "info: The permissions on /root are normal"
+fi
+
+echo
+echo -e "Here's what's in /root: \n"
+find /root -type f -perm -o=r -printf "%m \t %P \n"
+
+echo
+find /root -type f -not -gid 0 -not -uid 0 -printf "%m \t %u:%g \t %P \n"
+
+
+
+###############
+# sudo users #
+###############
+
+
+echo
+echo "-------------[ sudo users ]------------------"
+
+#enter users you expect to be in this group
+#delimit this as so: user1,user2,user3
+
+expected=""
+sudo_users=$(cat /etc/group | grep "sudo" | cut -d: -f4-)
+
+if [ "$sudo_users" == "$expected" ]
+then
+    echo "info: Sudo users as expected: $sudo_users"
+else
+    echo "info: Unexpected user in sudo users: $sudo_users"
+fi
+
+
+echo
+
+################
+# docker users #
+################
+
+
+echo
+echo "-------------[ docker users ]------------------"
+
+
+#enter users you expect to be in this group
+#delimit this as so: user1,user2,user3
+
+expected=""
+docker_users=$(cat /etc/group | grep "docker" | cut -d: -f4-)
+
+if [ "$docker_users" == "$expected" ]
+then
+    echo "info: Docker users as expected: $docker_users"
+else
+    echo "info: Unexpected user in Docker users: $docker_users"
+fi
+
+
+echo
