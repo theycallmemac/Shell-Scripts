@@ -1,0 +1,74 @@
+#!/bin/bash
+
+logs=""
+page="/"
+ignore=""
+countUnique=""
+
+
+logcheck() {
+    if [ ! -f /var/log/apache2/$logs/acces.log ]; then
+        usage
+    elif [ "$countUnique" != "" ] && [ "$ignore" != "" ]; then
+        cat /var/log/apache2/$logs/access.log | grep -w "$page" | cut -d- -f1 | grep -v "$ignore" | sort -u | wc -l
+    elif [ "$countUnique" != "" ] && [ "$ignore" == "" ];then
+        cat /var/log/apache2/$logs/access.log | grep -w "$page" | cut -d- -f1 | sort -u | wc -l
+    elif [ "$countUnique" == "" ] && [ "$ignore" != "" ];then 
+        cat /var/log/apache2/$logs/access.log | grep -w "$page" | cut -d- -f1 | grep -v "$ignore" 
+    else
+        cat /var/log/apache2/$logs/access.log | grep -w "$page" | cut -d- -f1
+    fi
+}
+
+
+usage() {
+        cat <<EOF
+logcheck
+
+Description: A quick way to search apache2 logs for IP addresses and unique hits.
+
+Usage: logcheck [-h] [(-l <logs>)] [(-p <page>)] [-u] [(-i <ignore>)]
+    -h  Show this help message
+    -l  Choose the logs to check
+    -p  Choose what page to check (checks "/" by default)
+    -u  Count IP Adresses in logs
+    -i  Ignore an IP or set of IP's
+
+Examples:
+    logcheck -h
+    logcheck -l example.com -i 136.206 -u
+    logcheck -l example.com -p /about -i 136.206.5.71
+    logcheck -l example.com -p /contact -i 136.206.5.71 -u
+EOF
+}
+
+
+# Accepts only w, m, y, and h
+# Anything else results in the help message
+while getopts ":l:p:i:uh" opt; do
+    case "${opt}" in
+        h)
+            usage
+            exit 0
+            ;;
+        l)
+            logs=$OPTARG
+            ;;
+        p)
+            page=$OPTARG
+            ;;
+        u)
+            countUnique="Y"
+            ;;
+        i)
+            ignore=$OPTARG
+            ;;
+        *)
+            usage
+            exit 0
+            ;;
+    esac
+done
+
+logcheck || exit 1
+exit 0
