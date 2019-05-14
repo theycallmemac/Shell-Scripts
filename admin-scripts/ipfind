@@ -1,0 +1,37 @@
+#!/bin/bash
+
+
+probe () {
+    ping -c1 -w5 $1 >&- 2>&- || touch /tmp/pingfail.$1
+}
+
+
+removePingFail () {
+    rm /tmp/pingfail.* 2>&-
+
+}
+
+echo Pinging IPs...
+echo -ne '\n'
+echo -ne '########## . . . . . . . . . .  (33%)\r'
+sleep 1
+echo -ne '#################### . . . . .  (66%)\r'
+sleep 2
+echo -ne '##############################  (100%)\n'
+echo -ne '\n'
+echo Loading IPs...
+
+removePingFail
+
+for i in $(seq 1 255); do
+  probe 192.168.0.$i &
+done;
+
+wait
+
+for ip in /tmp/pingfail.*; do
+  echo ${ip#*.}
+done | sort -nt. -k1,1 -k2,2 -k3,3 -k4,4
+
+
+removePingFail
