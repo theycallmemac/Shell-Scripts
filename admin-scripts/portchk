@@ -1,0 +1,2 @@
+#!/bin/bash
+netstat -tulpn | grep -w ":::$1"
