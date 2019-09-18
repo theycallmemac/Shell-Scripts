@@ -6,16 +6,16 @@
 # Data scraped from this script is stored in a yaml file.
 
 main() {
-    touch stats.yaml
-    rm stats.yaml
+    touch /tmp/stats.yaml
+    rm /tmp/stats.yaml
     commands=("bus" "coinflip" "isitup" "luas" "nslookup" "pwgen" "pwned" "room" "ssl" "weather" "wiki" "uptime")
     for cmd in "${commands[@]}"; do
         get_invocation_count
-        echo "$cmd: $count" >> stats.yaml
+        echo "$cmd: $count" >> /tmp/stats.yaml
     done;
     get_diff
     if [[ ($? != 0) && ($count != 0) ]]; then
-        mv stats.yaml /tmp/brickbot.stats.yaml
+        mv /tmp/stats.yaml /tmp/brickbot.stats.yaml
     fi
     return 0
 }
@@ -25,7 +25,7 @@ get_invocation_count() {
 }
 
 get_diff() {
-    diff stats.yaml /tmp/brickbot.stats.yaml
+    diff /tmp/stats.yaml /tmp/brickbot.stats.yaml > /tmp/brickbot.diffs
 }
 
 main || exit 1
