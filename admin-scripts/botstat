@@ -25,7 +25,7 @@ get_invocation_count() {
 }
 
 get_diff() {
-    diff /tmp/stats.yaml /tmp/brickbot.stats.yaml > /tmp/brickbot.diffs
+    diff /tmp/stats.yaml /tmp/brickbot.stats.yaml >> /tmp/brickbot.diffs
 }
 
 main || exit 1
