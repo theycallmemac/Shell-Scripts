@@ -1,16 +1,14 @@
 # Generate self signed ssl certs using letsencrypt
-# install using `git clone https://github.com/letsencrypt/letsencrypt /opt/letsencrypt`
-# please make sure it's in `/opt/letsencrypt`
+# install using `apt -y install certbot`
 
 # give name of site you want to generate a certificate for on the commandline
 NAME=$1
-cd /opt/letsencrypt
 
 # apache needs to be stopped first
-service apache2 stop
+systemctl stop apache2
 
 # generate certificate for $NAME
-./letsencrypt-auto certonly --standalone -d ${NAME}
+certbot certonly --standalone -d ${NAME}
 
 # restart apache web server
-service apache2 restart
+systemctl restart apache2
