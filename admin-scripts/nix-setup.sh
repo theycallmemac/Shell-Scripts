@@ -4,5 +4,8 @@ git clone https://github.com/theycallmemac/nix-configs /etc/nixos2
 pushd /etc/nixos2
 git checkout -b ec2 remotes/origin/ec2
 cp -R /etc/nixos2/* /etc/nixos/
+cp -R /etc/nixos2/.git /etc/nixos/.git
+nix-channel --add https://github.com/nix-community/home-manager/archive/release-20.09.tar.gz home-manager
+nix-channel --update
 nixos-rebuild switch
 rm -r /etc/nixos2
