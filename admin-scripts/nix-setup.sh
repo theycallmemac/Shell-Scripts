@@ -1,5 +1,12 @@
 ### copy default config file with git to clone repository
 curl -s https://gist.githubusercontent.com/theycallmemac/19ac8930570f2d88b645c3d5eab10169/raw/286b1bc05279c056d55a331a92970101132fbc69/configuration.nix > /etc/nixos/configuration.nix
+
+### create swapfile as t4g.nano only has 512MB of RAM, not enough to run the switch
+fallocate -l 1.5G /swapfile
+chmod 600 /swapfile
+mkswap /swapfile
+swapon /swapfile
+
 nixos-rebuild switch
 
 ### clone repository and copy contents to nixos directory
